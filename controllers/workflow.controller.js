@@ -8,13 +8,13 @@ import Subscription from '../models/subscription.model.js';
 const REMINDERS = [7, 5, 2, 1]
 
 export const sendReminders = serve(async (context) => {
+  console.log("sendReminders");
   const { subscriptionId } = context.requestPayload;
   const subscription = await fetchSubscription(context, subscriptionId);
-
+  console.log(subscription.status);
   if(!subscription || subscription.status !== 'active') return;
 
   const renewalDate = dayjs(subscription.renewalDate);
-
   if(renewalDate.isBefore(dayjs())) {
     console.log(`Renewal date has passed for subscription ${subscriptionId}. Stopping workflow.`);
     return;
