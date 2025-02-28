@@ -2,6 +2,20 @@ import Subscription from '../models/subscription.model.js'
 import { workflowClient } from '../config/upstash.js'
 import { SERVER_URL } from '../config/env.js'
 
+export const getSubscriptions = async (req, res, next) => {
+  try {
+    const subscriptions = await Subscription.find();
+    res.status(200).json(
+      { 
+        success: true, 
+        data: subscriptions 
+      });
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
 export const createSubscription = async (req, res, next) => {
   try {
     const subscription = await Subscription.create({
@@ -40,5 +54,25 @@ export const getUserSubscriptions = async (req, res, next) => {
     res.status(200).json({ success: true, data: subscriptions });
   } catch (e) {
     next(e);
+  }
+}
+
+export const updateSubscription = async (req, res, next) => {
+  try {
+    const subscription = await Subscription.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true});
+      if(!subscription) {
+        return res.status(404).json({
+          success: false,
+          message: 'Subscription not found'
+        });
+      }
+      res.status(200).json({
+        success: true,
+        data: subscription});
+  }
+  catch (error) {
+    next(error);
   }
 }
