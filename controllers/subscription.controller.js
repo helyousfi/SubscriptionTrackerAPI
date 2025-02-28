@@ -78,7 +78,7 @@ export const updateSubscription = async (req, res, next) => {
 }
 
 export const deleteSubscription = async (req, res, next) => {
-  try{
+  try {
     const subscription = await Subscription.findByIdAndDelete(req.params.id);
     if(!subscription) {
       return res.status(404).json({
@@ -94,3 +94,23 @@ export const deleteSubscription = async (req, res, next) => {
     next(error);
   }
 }
+
+export const getSubscriptionsByUser = async (req, res, next) => {
+  try{
+    const subscription = await Subscription.find({ user: req.params.id });
+    if(!subscription) {
+      return res.status(404).json({
+        success: false,
+        message: 'Subscription not found'
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: subscription
+    });
+  } 
+  catch (error) {
+    next(error);
+  }
+};
+
