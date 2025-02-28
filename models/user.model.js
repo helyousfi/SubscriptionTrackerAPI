@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { agent } from "supertest";
 
 const Schema = mongoose.Schema;
 
