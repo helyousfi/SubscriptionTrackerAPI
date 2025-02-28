@@ -74,3 +74,16 @@ The Subscription Tracker API is a backend service designed to manage user subscr
   - Method: DELETE
   - Path: /api/v1/subscriptions/{id}
   - Description: Deletes a subscription by its unique ID.
+- Cancel Subscription
+  - Method: PUT
+  - Path: /api/v1/subscriptions/{id}/cancel
+  - Description: Cancels a subscription by its unique ID.
+- Get Upcoming Renewals
+  - Method: GET
+  - Path: /api/v1/subscriptions/upcoming-renewals
+  - Description: Retrieves a list of subscriptions with upcoming renewal dates.
+## 4. Workflow Routes
+- Send Subscription Reminders
+  - Method: POST
+  - Path: /api/v1/workflows/subscription/reminder
+  - Description: Sends reminders for subscriptions.
