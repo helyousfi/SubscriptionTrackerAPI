@@ -1,3 +1,4 @@
+![image](https://github.com/user-attachments/assets/0d4e63f3-666a-4788-b8ea-49bf7ba8098b)
 # Project Overview
 The Subscription Tracker API is a backend service designed to manage user subscriptions effectively. It offers functionalities such as user authentication, authorization, subscription management, and workflow automation. The API is built using Node.js with the Express framework and utilizes MongoDB for data storage.
 
