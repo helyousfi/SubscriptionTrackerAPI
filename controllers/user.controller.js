@@ -38,8 +38,10 @@ export const getUser = async (req, res, next) => {
 // Update user details
 export const updateUser = async (req, res, next) => {
     try {
-        const user = await
-        User.findByIdAndUpdate(req.params.id, req.body, {
+        if (req.body.role) {
+            delete req.body.role;
+        }
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
         });
