@@ -13,14 +13,14 @@ import authorizeAdmin from "../middlewares/adminAuth.middleware.js";
 
 const subscriptionRouter = Router();
 
-subscriptionRouter.get('/', authorizeAdmin, getSubscriptions);
-subscriptionRouter.get('/:id', authorize, getUserSubscriptions);
-subscriptionRouter.post('/', authorize, createSubscription);
-subscriptionRouter.put('/:id', authorize ,updateSubscription);
-subscriptionRouter.delete('/:id', authorize, deleteSubscription);
-subscriptionRouter.get('/user/:id', authorize, getSubscriptionsByUser);
-subscriptionRouter.put('/:id/cancel', authorize, cancelSubscription);
+subscriptionRouter.get('/', authorize('admin'), getSubscriptions);
+subscriptionRouter.get('/:id', authorize('user'), getUserSubscriptions);
+subscriptionRouter.post('/', authorize('user'), createSubscription);
+subscriptionRouter.put('/:id', authorize('user') ,updateSubscription);
+subscriptionRouter.delete('/:id', authorize('user'), deleteSubscription);
+subscriptionRouter.get('/user/:id', authorize('user'), getSubscriptionsByUser);
+subscriptionRouter.put('/:id/cancel', authorize('user'), cancelSubscription);
 subscriptionRouter.get('/upcoming-renewals', getUpcomingRenewals);
-subscriptionRouter.delete('/', authorizeAdmin, deleteAllSubscriptions);
+subscriptionRouter.delete('/', authorize('admin'), deleteAllSubscriptions);
 
 export default subscriptionRouter;

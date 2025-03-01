@@ -13,7 +13,7 @@ export const signup = async (req, res, next) => {
     session.startTransaction();
 
     try {
-        const { username, email, password, age } = req.body;
+        const { username, email, password, age, adminKey } = req.body;
 
         // Check if user already exists
         let existingUser = await User.findOne({ email }).session(session);
@@ -27,12 +27,21 @@ export const signup = async (req, res, next) => {
         const salt = await bcrypt.genSalt(10); // Async method for hashing
         const hashedPassword = await bcrypt.hash(password, salt); // Async method for hashing
 
-        // Create new user
+        // Set default role
+        let role = 'user';
+
+        // If adminKey is correct, upgrade role to "admin"
+        if (adminKey && adminKey === process.env.ADMIN_SECRET_KEY) {
+            role = 'admin';
+        }
+
+        // Create new user with correct role
         const newUser = new User({
             username,
             email,
             password: hashedPassword,
-            age
+            age,
+            role // Set the role properly
         });
 
         // Save the new user within the transaction

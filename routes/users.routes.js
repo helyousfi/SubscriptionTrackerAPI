@@ -5,9 +5,9 @@ import { getUsers, getUser, updateUser, deleteUser } from '../controllers/user.c
 
 const userRouter = Router();
 
-userRouter.get('/', getUsers);
-userRouter.get('/:id', authorize, getUser);
-userRouter.put('/:id', authorize, updateUser);
-userRouter.delete('/:id', deleteUser);
+userRouter.get('/', authorize('admin'), getUsers);
+userRouter.get('/:id', authorize('user'), getUser);
+userRouter.put('/:id', authorize('user'), updateUser);
+userRouter.delete('/:id', authorize('user'), deleteUser);
 
 export default userRouter;
