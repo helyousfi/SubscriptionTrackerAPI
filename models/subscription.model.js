@@ -32,7 +32,7 @@ const subscriptionSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ['entertainment', 'education', 'health', 'utility', 'other']
+        enum: ['entertainment', 'education', 'digital_services', 'utility', 'other']
     },
     paymentMethod: {
         type: String,

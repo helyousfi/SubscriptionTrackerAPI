@@ -3,7 +3,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { serve } = require("@upstash/workflow/express");
 import Subscription from '../models/subscription.model.js';
-// import { sendReminderEmail } from '../utils/send-email.js'
+import { sendReminderEmail } from '../utils/send-email.js'
 
 const REMINDERS = [7, 5, 2, 1]
 
@@ -28,7 +28,9 @@ export const sendReminders = serve(async (context) => {
     }
 
     if (dayjs().isSame(reminderDate, 'day')) {
+      console.log(`dayjs().isSame(reminderDate, 'day')`);
       await triggerReminder(context, `${daysBefore} days before reminder`, subscription);
+      console.log(`Triggered ${daysBefore} days before reminder for subscription ${subscriptionId}`);
     }
   }
 });
@@ -44,7 +46,7 @@ const sleepUntilReminder = async (context, label, date) => {
   await context.sleepUntil(label, date.toDate());
 }
 
-/* const triggerReminder = async (context, label, subscription) => {
+const triggerReminder = async (context, label, subscription) => {
   return await context.run(label, async () => {
     console.log(`Triggering ${label} reminder`);
 
@@ -54,4 +56,4 @@ const sleepUntilReminder = async (context, label, date) => {
       subscription,
     })
   })
-}*/
+}

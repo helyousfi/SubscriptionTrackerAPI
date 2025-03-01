@@ -7,7 +7,7 @@ const userRouter = Router();
 
 userRouter.get('/', getUsers);
 userRouter.get('/:id', authorize, getUser);
-userRouter.put('/:id', updateUser);
+userRouter.put('/:id', authorize, updateUser);
 userRouter.delete('/:id', deleteUser);
 
 export default userRouter;

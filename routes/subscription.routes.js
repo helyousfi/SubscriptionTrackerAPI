@@ -6,7 +6,8 @@ import { createSubscription,
     deleteSubscription,
     getSubscriptionsByUser,
     cancelSubscription,
-    getUpcomingRenewals } from "../controllers/subscription.controller.js";
+    getUpcomingRenewals,
+    deleteAllSubscriptions } from "../controllers/subscription.controller.js";
 import authorize from "../middlewares/authorization.middleware.js";
 
 const subscriptionRouter = Router();
@@ -19,5 +20,6 @@ subscriptionRouter.delete('/:id', authorize, deleteSubscription);
 subscriptionRouter.get('/user/:id', authorize, getSubscriptionsByUser);
 subscriptionRouter.put('/:id/cancel', authorize, cancelSubscription);
 subscriptionRouter.get('/upcoming-renewals', getUpcomingRenewals);
+subscriptionRouter.delete('/', deleteAllSubscriptions);
 
 export default subscriptionRouter;
