@@ -38,6 +38,7 @@ export const getUser = async (req, res, next) => {
 // Update user details
 export const updateUser = async (req, res, next) => {
     try {
+        // You can't update the role of a user using this route
         if (req.body.role) {
             delete req.body.role;
         }

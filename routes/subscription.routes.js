@@ -21,6 +21,6 @@ subscriptionRouter.delete('/:id', authorize, deleteSubscription);
 subscriptionRouter.get('/user/:id', authorize, getSubscriptionsByUser);
 subscriptionRouter.put('/:id/cancel', authorize, cancelSubscription);
 subscriptionRouter.get('/upcoming-renewals', getUpcomingRenewals);
-subscriptionRouter.delete('/', deleteAllSubscriptions);
+subscriptionRouter.delete('/', authorizeAdmin, deleteAllSubscriptions);
 
 export default subscriptionRouter;
