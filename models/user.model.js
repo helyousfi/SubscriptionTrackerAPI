@@ -28,6 +28,11 @@ const userSchema = new Schema({
         type: Number,
         min: [18, 'You must be at least 18 years old to register'],
         max: [120, 'You cannot be older than 120 years']
+    },
+    role : {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
     }
 });
 

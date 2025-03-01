@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.js';
 import User from '../models/user.model.js';
 
-const authorize = async (req, res, next) => {
+const authorizeAdmin = async (req, res, next) => {
     try {
         let token;
         if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -22,14 +22,21 @@ const authorize = async (req, res, next) => {
                 message: 'User not found'
             });
         }
+        console.log(user.role); 
+        if(user.role !== 'admin') {
+            return res.status(403).json({
+                success: false,
+                message: 'Forbidden access'
+            });
+        }
         req.user = user;
         next();
     } catch (error) {
         res.status(401).json({
             success: false,
-            message: 'Unothorized access'
+            message: 'Unauthorized access'
         });
     }
 }
 
-export default authorize;
+export default authorizeAdmin;

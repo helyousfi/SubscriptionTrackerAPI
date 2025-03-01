@@ -9,10 +9,11 @@ import { createSubscription,
     getUpcomingRenewals,
     deleteAllSubscriptions } from "../controllers/subscription.controller.js";
 import authorize from "../middlewares/authorization.middleware.js";
+import authorizeAdmin from "../middlewares/adminAuth.middleware.js";
 
 const subscriptionRouter = Router();
 
-subscriptionRouter.get('/', getSubscriptions);
+subscriptionRouter.get('/', authorizeAdmin, getSubscriptions);
 subscriptionRouter.get('/:id', authorize, getUserSubscriptions);
 subscriptionRouter.post('/', authorize, createSubscription);
 subscriptionRouter.put('/:id', authorize ,updateSubscription);
