@@ -13,14 +13,14 @@ import authorizeAdmin from "../middlewares/adminAuth.middleware.js";
 
 const subscriptionRouter = Router();
 
-subscriptionRouter.get('/', authorize('admin'), getSubscriptions);
-subscriptionRouter.get('/:id', authorize('user'), getUserSubscriptions);
-subscriptionRouter.post('/', authorize('user'), createSubscription);
-subscriptionRouter.put('/:id', authorize('user') ,updateSubscription);
-subscriptionRouter.delete('/:id', authorize('user'), deleteSubscription);
-subscriptionRouter.get('/user/:id', authorize('user'), getSubscriptionsByUser);
-subscriptionRouter.put('/:id/cancel', authorize('user'), cancelSubscription);
+subscriptionRouter.get('/', authorize('moderator', 'admin', 'superadmin'), getSubscriptions);
+subscriptionRouter.get('/:id', authorize('user', 'moderator', 'admin', 'superadmin'), getUserSubscriptions);
+subscriptionRouter.post('/', authorize('user', 'moderator', 'admin', 'superadmin'), createSubscription);
+subscriptionRouter.put('/:id', authorize('user', 'moderator', 'admin', 'superadmin') ,updateSubscription);
+subscriptionRouter.delete('/:id', authorize('user', 'moderator', 'admin', 'superadmin'), deleteSubscription);
+subscriptionRouter.get('/user/:id', authorize('user', 'moderator', 'admin', 'superadmin'), getSubscriptionsByUser);
+subscriptionRouter.put('/:id/cancel', authorize('user', 'moderator', 'admin', 'superadmin'), cancelSubscription);
 subscriptionRouter.get('/upcoming-renewals', getUpcomingRenewals);
-subscriptionRouter.delete('/', authorize('admin'), deleteAllSubscriptions);
+subscriptionRouter.delete('/', authorize('superadmin'), deleteAllSubscriptions);
 
 export default subscriptionRouter;
