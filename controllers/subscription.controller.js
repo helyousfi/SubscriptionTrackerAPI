@@ -67,14 +67,14 @@ export const getUserSubscriptions = async (req, res, next) => {
 
 export const updateSubscription = async (req, res, next) => {
   try {
-    const subscription = await Subscription.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true});
+    const subscription = await Subscription.findByIdAndUpdate(req.params.id, req.body, 
+      {
+        new: true,
+        runValidators: true});
       if(!subscription) {
         return res.status(404).json({
           success: false,
-          message: 'Subscription not found'
-        });
+          message: 'Subscription not found'});
       }
       res.status(200).json({
         success: true,

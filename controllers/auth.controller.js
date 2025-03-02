@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
-import { JWT_SECRET, JWT_EXPIRE_IN } from '../config/env.js';
+import { JWT_SECRET, 
+    JWT_EXPIRE_IN, 
+    ADMIN_SECRET_KEY, 
+    MODERATOR_SECRET_KEY,
+    SUPERADMIN_SECRET_KEY } from '../config/env.js';
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -33,9 +37,15 @@ export const signup = async (req, res, next) => {
         let role = 'user';
 
         // If adminKey is correct, upgrade role to "admin"
-        if (adminKey && adminKey === process.env.ADMIN_SECRET_KEY) {
+        if (adminKey && adminKey === ADMIN_SECRET_KEY) {
             role = 'admin';
+        } else if (adminKey && adminKey === MODERATOR_SECRET_KEY) {
+            role = 'moderator';
+        } else if (adminKey && adminKey === SUPERADMIN_SECRET_KEY) {
+            role = 'superadmin';
         }
+        
+        
 
         // Create new user with correct role
         const newUser = new User({
