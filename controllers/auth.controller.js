@@ -49,25 +49,21 @@ export const signup = async (req, res, next) => {
         await newUser.save({ session });
 
         // Generate token
-        const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: JWT_EXPIRE_IN });
+        // const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: JWT_EXPIRE_IN });
 
         // ✅ Generate confirmation token
         const confirmationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // ✅ Send confirmation email
         await sendConfirmationEmail(email, confirmationToken);
-        
+
         // Commit the transaction
         await session.commitTransaction();
 
         // Respond with the token and user data
         res.status(201).json({
             success: true,
-            message: 'User created successfully',
-            data: {
-                token,
-                user: newUser
-            }
+            message: 'User created. Please check your email to confirm your subscription.',
         });  
 
     } catch (error) {
@@ -133,3 +129,27 @@ export const signin = async (req, res) => {
 export const signout = (req, res) => {
     res.status(200).json({ msg: 'User signed out successfully' });
 };
+
+router.get('/confirm', async (req, res) => {
+    try {
+        const { token } = req.query;
+        if(!token) {
+            return res.status(400).json({
+                success: false,
+                message: 'No token provided'
+            });
+        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findOneAndUpdate(
+            { email: decoded.email },
+            { isConfirmed: true },
+            { new: true }
+        );
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'Invalid token or user not found.' });
+        }
+        res.send('Subscription confirmed! You can now log in.');
+    } catch (error) {
+        res.status(400).send('Invalid or expired token.');
+    }
+});
