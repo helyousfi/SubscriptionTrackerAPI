@@ -4,7 +4,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 
 if(!DB_URI)
 {
-    throw new Error("Missing database connection string. Please define the 'MONGODB_URI' environment variable.");
+    throw new Error("Missing database connection string. Please define the 'DB_URI' environment variable.");
 }
 
 // Connect to the database
