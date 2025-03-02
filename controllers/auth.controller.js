@@ -53,7 +53,7 @@ export const signup = async (req, res, next) => {
         // const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: JWT_EXPIRE_IN });
 
         // Generate confirmation token
-        const confirmationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const confirmationToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
 
         // Send confirmation email
         await sendConfirmationEmail(email, confirmationToken);
@@ -146,7 +146,7 @@ export const confirmUser = async (req, res) => {
                 message: 'No token provided'
             });
         }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         const user = await User.findOneAndUpdate(
             { email: decoded.email },
             { isConfirmed: true },
@@ -171,7 +171,7 @@ export const requestPasswordReset = async (req, res) => {
         }
 
         // Generate a password reset token (valid for 1 hour)
-        const resetToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const resetToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
 
         // Send password reset email
         await sendPasswordResetEmail(email, resetToken);
@@ -192,10 +192,11 @@ export const resetPassword = async (req, res) => {
         }
 
         // Verify the token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
 
         // Find the user by email
         const user = await User.findOne({ email: decoded.email });
+        console.log(user);
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
@@ -211,6 +212,28 @@ export const resetPassword = async (req, res) => {
         res.status(200).json({ success: true, message: 'Password reset successfully. You can now log in with your new password.' });
     } catch (error) {
         console.error('Error resetting password:', error);
+        res.status(400).json({ success: false, message: 'Invalid or expired token' });
+    }
+};
+
+export const showResetPasswordForm = (req, res) => {
+    const { token } = req.query;
+
+    if (!token) {
+        return res.status(400).json({ success: false, message: 'No token provided' });
+    }
+
+    try {
+        // Verify the token to ensure it's valid
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        // If token is valid, render the form or send a success message
+        res.status(200).json({
+            success: true,
+            message: 'Valid token. Proceed to reset your password.',
+        });
+    } catch (error) {
+        console.error('Error verifying token:', error);
         res.status(400).json({ success: false, message: 'Invalid or expired token' });
     }
 };

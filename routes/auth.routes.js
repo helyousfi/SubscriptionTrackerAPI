@@ -4,7 +4,8 @@ import { signup,
     signout, 
     confirmUser,
     requestPasswordReset,
-    resetPassword } from '../controllers/auth.controller.js';
+    resetPassword,
+    showResetPasswordForm  } from '../controllers/auth.controller.js';
 
 const authRouter = Router();
 
@@ -14,5 +15,6 @@ authRouter.post('/sign-out', signout);
 authRouter.get('/confirm', confirmUser);
 authRouter.post('/request-password-reset', requestPasswordReset);
 authRouter.post('/reset-password', resetPassword);
+authRouter.get('/reset-password', showResetPasswordForm );
 
 export default authRouter;
