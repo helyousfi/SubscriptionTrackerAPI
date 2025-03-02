@@ -33,6 +33,11 @@ const userSchema = new Schema({
         type: String,
         enum: ['user', 'moderator', 'admin', 'superadmin'],
         default: 'user'
+    },
+    isConfirmed: { 
+        type: 
+        Boolean, 
+        default: false 
     }
 });
 

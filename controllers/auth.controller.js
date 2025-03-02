@@ -3,6 +3,7 @@ import { JWT_SECRET, JWT_EXPIRE_IN } from '../config/env.js';
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { sendConfirmationEmail } from '../utils/sendConfirmationEmail.js'
 
 // Sign Up
 export const signup = async (req, res, next) => {
@@ -50,6 +51,12 @@ export const signup = async (req, res, next) => {
         // Generate token
         const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: JWT_EXPIRE_IN });
 
+        // ✅ Generate confirmation token
+        const confirmationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // ✅ Send confirmation email
+        await sendConfirmationEmail(email, confirmationToken);
+        
         // Commit the transaction
         await session.commitTransaction();
 
