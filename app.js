@@ -9,6 +9,8 @@ import errorMiddleware from './middlewares/error.middleware.js';
 import cookieParser from 'cookie-parser';
 import arcjetMiddleware from './middlewares/arcjet.middleware.js';
 import worflowRouter from './routes/workflow.routes.js';
+import morgan from 'morgan';
+
 
 // Create an express app
 const app = express();
@@ -21,6 +23,7 @@ app.use(arcjetMiddleware);
 app.use(cookieParser());
 
 // Routes
+app.use(morgan('dev'));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/subscriptions', subscriptionRouter);
