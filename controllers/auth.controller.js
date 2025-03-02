@@ -4,6 +4,7 @@ import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { sendConfirmationEmail } from '../utils/sendConfirmationEmail.js'
+import { sendPasswordResetEmail } from '../utils/sendPasswordResetEmail.js';
 
 // Sign Up
 export const signup = async (req, res, next) => {
@@ -51,10 +52,10 @@ export const signup = async (req, res, next) => {
         // Generate token
         // const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: JWT_EXPIRE_IN });
 
-        // ✅ Generate confirmation token
+        // Generate confirmation token
         const confirmationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        // ✅ Send confirmation email
+        // Send confirmation email
         await sendConfirmationEmail(email, confirmationToken);
 
         // Commit the transaction
@@ -157,5 +158,59 @@ export const confirmUser = async (req, res) => {
         res.send('Subscription confirmed! You can now log in.');
     } catch (error) {
         res.status(400).send('Invalid or expired token.');
+    }
+};
+
+export const requestPasswordReset = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Generate a password reset token (valid for 1 hour)
+        const resetToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Send password reset email
+        await sendPasswordResetEmail(email, resetToken);
+
+        res.status(200).json({ success: true, message: 'Password reset link sent to your email.' });
+    } catch (error) {
+        console.error('Error sending reset email:', error);
+        res.status(500).json({ success: false, message: 'Something went wrong' });
+    }
+};
+
+export const resetPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+
+        if (!token || !newPassword) {
+            return res.status(400).json({ success: false, message: 'Token and new password are required' });
+        }
+
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Find the user by email
+        const user = await User.findOne({ email: decoded.email });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Hash the new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Update the user's password
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json({ success: true, message: 'Password reset successfully. You can now log in with your new password.' });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(400).json({ success: false, message: 'Invalid or expired token' });
     }
 };
