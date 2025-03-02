@@ -95,6 +95,11 @@ export const signin = async (req, res) => {
             throw error;
         }
         
+        // Check if email is confirmed
+        if (!user.isConfirmed) {
+            return res.status(403).json({ success: false, message: "Please confirm your email before logging in." });
+        }
+
         // Compare passwords
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
@@ -130,7 +135,8 @@ export const signout = (req, res) => {
     res.status(200).json({ msg: 'User signed out successfully' });
 };
 
-router.get('/confirm', async (req, res) => {
+// Confirm User
+export const confirmUser = async (req, res) => {
     try {
         const { token } = req.query;
         if(!token) {
@@ -152,4 +158,4 @@ router.get('/confirm', async (req, res) => {
     } catch (error) {
         res.status(400).send('Invalid or expired token.');
     }
-});
+};

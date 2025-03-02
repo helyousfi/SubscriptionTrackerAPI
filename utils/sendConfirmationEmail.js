@@ -1,8 +1,9 @@
 import transporter, { accountEmail } from '../config/nodemailer.js'
+import { PORT } from '../config/env.js';
 
-const sendConfirmationEmail = async (userEmail, confirmationToken) => {
+export const sendConfirmationEmail = async (userEmail, confirmationToken) => {
     try{
-        const confirmationLink = `http://domain.com/confirm?token=${confirmationToken}`;
+        const confirmationLink = `http://localhost:${PORT}/api/v1/auth/confirm?token=${confirmationToken}`;
         const mailOptions = {
             from: accountEmail,
             to: userEmail,
@@ -21,5 +22,3 @@ const sendConfirmationEmail = async (userEmail, confirmationToken) => {
         console.log('Error sending confirmation Email!', error);
     }
 }
-
-export default sendConfirmationEmail;
