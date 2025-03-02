@@ -23,6 +23,16 @@ const authorize = (...allowedRoles) => {
                     message: 'User not found'
                 });
             }
+            
+            // Extract target user ID from request
+            const targetUserId = req.params.id;
+
+            // Allow user to modify their own account
+            if (targetUserId && targetUserId === user._id.toString()) {
+                req.user = user;
+                return next();
+            }
+
             if(!allowedRoles.includes(user.role)) {
                 return res.status(403).json({
                     success: false,

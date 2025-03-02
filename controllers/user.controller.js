@@ -63,9 +63,29 @@ export const updateUser = async (req, res, next) => {
 }
 
 // Delete a user
-export const deleteUser = async (req, res, next) => {
+export const deleteUserById = async (req, res, next) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
+        if(!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: {}
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+// Delete a user
+export const deleteUser = async (req, res, next) => {
+    try {
+        const user = await User.findByIdAndDelete(req.user.id);
         if(!user) {
             return res.status(404).json({
                 success: false,
