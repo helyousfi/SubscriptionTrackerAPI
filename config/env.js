@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 
 // Determine the correct environment file
 const envFile = `.env.${process.env.NODE_ENV || 'development'}.local`;
-
+console.log(`process.env.NODE_ENV ${process.env.NODE_ENV}`);
 config({ path: envFile });
 
 export const { PORT, 
