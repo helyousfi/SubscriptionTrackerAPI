@@ -16,7 +16,7 @@ import morgan from 'morgan';
 const app = express();
 
 // Middlewares
-app.use(express.json());
+app.use(express.json()); // parse incoming json requests and make them available in req.body
 app.use(express.urlencoded({ extended: true })); // process form data
 app.use(errorMiddleware);
 app.use(arcjetMiddleware);
