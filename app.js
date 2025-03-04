@@ -15,6 +15,9 @@ import morgan from 'morgan';
 // Create an express app
 const app = express();
 
+app.locals.title = 'Subscription Tracker API';
+app.locals.email = 'support@subscription-tracker.com';
+
 // Middlewares
 app.use(express.json()); // parse incoming json requests and make them available in req.body
 app.use(express.urlencoded({ extended: true })); // process form data
